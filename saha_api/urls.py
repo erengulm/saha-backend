@@ -18,5 +18,29 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('members.urls')),  # this routes to members app
+    path('api/', include('members.urls')),  # This mounts /api/register/, /api/login/, etc.
 ]
+
+"""
+from django.contrib import admin
+from django.urls import path, include
+from members import views as member_views
+from members.views import csrf_token_view  # assuming you defined this
+
+
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+
+    # CSRF Token Endpoint
+    path('api/csrf/', csrf_token_view, name='csrf-token'),
+
+    # Auth Endpoints
+    path('api/register/', member_views.RegisterView.as_view(), name='register'),
+    path('api/login/', member_views.LoginView.as_view(), name='login'),
+    path('api/logout/', member_views.LogoutView.as_view(), name='logout'),
+
+    # Other app-specific endpoints
+    path('api/', include('members.urls')),
+]
+"""
