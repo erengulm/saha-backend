@@ -5,9 +5,6 @@ from django.db import models
 
 CITY_CHOICES = [
     ('Istanbul', 'Istanbul'),
-    ('Ankara', 'Ankara'),
-    ('Izmir', 'Izmir'),
-    # Add more as needed
 ]
 
 ROLE_CHOICES = [
