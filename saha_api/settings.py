@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-y%vftz$vnkuu9)$&322ju_35=yze=xrhd1#hgmoom#oc4*4w2e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -56,18 +56,6 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
 
 ]
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',  # your React frontend
-]
-
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:3000',
-]
-
-
-AUTH_USER_MODEL = 'members.User'
-
 ROOT_URLCONF = 'saha_api.urls'
 
 TEMPLATES = [
@@ -89,9 +77,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'saha_api.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -99,10 +84,27 @@ DATABASES = {
     }
 }
 
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # your React frontend
+]
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+]
 
-# Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+}
+
+AUTH_USER_MODEL = 'members.User'
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -118,10 +120,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -150,10 +148,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ]
-}
+
+
 
 

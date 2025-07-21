@@ -2,14 +2,19 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User
 
+
 class CustomUserAdmin(UserAdmin):
-    model = User
-    list_display = ('username', 'email', 'city', 'role', 'is_staff', 'is_active')
+    list_display = ('username', 'email', 'city', 'role', 'is_staff', 'created_at')
+    list_filter = ('role', 'city', 'is_staff', 'created_at')
+    search_fields = ('username', 'email', 'city')
+
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('city', 'role')}),
+        ('Additional Info', {'fields': ('city', 'role')}),
     )
+
     add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('city', 'role')}),
+        ('Additional Info', {'fields': ('email', 'city', 'role')}),
     )
+
 
 admin.site.register(User, CustomUserAdmin)
