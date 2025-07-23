@@ -15,7 +15,6 @@ Including another URLconf
 """
 # saha-backend/saha_api/urls.py
 
-# saha_api/urls.py
 
 from django.contrib import admin
 from django.urls import path, include
