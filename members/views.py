@@ -22,7 +22,6 @@ def get_csrf_token(request):
     token = get_token(request)
     return JsonResponse({'csrfToken': token, 'message': 'CSRF cookie set'})
 
-
 @api_view(['POST'])
 def login_view(request):
     """Login with email and password - Fixed response format"""
@@ -117,7 +116,8 @@ def register_user(request):
     """
 
     # Extract data from request
-    username = request.data.get('username', '').strip()
+    first_name = request.data.get('first_name', '').strip()
+    last_name = request.data.get('last_name', '').strip()
     email = request.data.get('email', '').strip().lower()
     phone = request.data.get('phone', '').strip()
     city = request.data.get('city', '').strip()
@@ -129,10 +129,15 @@ def register_user(request):
     errors = {}
 
     # Basic field validation
-    if not username:
-        errors['username'] = ['Kullanıcı adı gereklidir']
-    elif len(username) < 3:
-        errors['username'] = ['Kullanıcı adı en az 3 karakter olmalıdır']
+    if not first_name:
+        errors['first_name'] = ['Ad gereklidir']
+    elif len(first_name) < 2:
+        errors['first_name'] = ['Ad en az 2 karakter olmalıdır']
+
+    if not last_name:
+        errors['last_name'] = ['Soyad gereklidir']
+    elif len(last_name) < 2:
+        errors['last_name'] = ['Soyad en az 2 karakter olmalıdır']
 
     if not email:
         errors['email'] = ['E-posta adresi gereklidir']
@@ -165,12 +170,6 @@ def register_user(request):
         return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        # Split username into first_name and last_name if it contains spaces
-        # Otherwise, use username as first_name
-        name_parts = username.split(' ', 1)
-        first_name = name_parts[0]
-        last_name = name_parts[1] if len(name_parts) > 1 else ''
-
         # Prepare data for serializer
         serializer_data = {
             'first_name': first_name,

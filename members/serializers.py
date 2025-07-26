@@ -78,13 +78,16 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         # Remove confirm_password from validated_data
         validated_data.pop('confirm_password')
 
-        # Set email as username and convert to lowercase
+        # Set email as the main identifier (no username needed)
         email = validated_data.get('email').lower().strip()
         validated_data['email'] = email
-        validated_data['username'] = email
 
-        # Create user with proper password hashing
-        user = User.objects.create_user(**validated_data)
+        # Create user with proper password hashing - use create_user without username
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+
         return user
 
 

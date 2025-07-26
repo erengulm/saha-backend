@@ -1,9 +1,10 @@
-# members/models.py
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
 class User(AbstractUser):
+    username = None  # Remove username field completely
+
     ROLE_CHOICES = [
         ('superadmin', 'Super Admin'),
         ('admin', 'Admin'),
@@ -17,13 +18,12 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    USERNAME_FIELD = 'email'  # Use email as the username field
-    REQUIRED_FIELDS = ['username']  # Include username since it's still part of AbstractUser
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name']  # Remove username
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}".strip() or self.email
 
-    # Add these helper properties for your views
     @property
     def is_superadmin(self):
         return self.role == 'superadmin'
