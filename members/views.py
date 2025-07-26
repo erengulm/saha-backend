@@ -24,7 +24,7 @@ def get_csrf_token(request):
 
 @api_view(['POST'])
 def login_view(request):
-    """Login with email and password - Fixed response format"""
+    """Login with email and password"""
     try:
         email = request.data.get('email')
         password = request.data.get('password')
@@ -154,7 +154,7 @@ def register_user(request):
 
     if not password:
         errors['password'] = ['Şifre gereklidir']
-    elif len(password) < 8:  # Updated to match frontend validation
+    elif len(password) < 8:
         errors['password'] = ['Şifre en az 8 karakter olmalıdır']
 
     if not confirm_password:
@@ -358,7 +358,6 @@ def get_users_by_city(request):
         }, status=status.HTTP_200_OK)
 
     except Exception as e:
-        print(f"Error in get_users_by_city: {e}")  # Debug line
         return Response({
             'success': False,
             'error': 'Kullanıcı verileri alınırken hata oluştu'
@@ -423,80 +422,3 @@ def change_user_role(request, user_id):
             'role_display': user.get_role_display(),
         }
     }, status=status.HTTP_200_OK)
-
-
-@api_view(['GET'])
-def debug_cities(request):
-    """Debug endpoint to check city names and matching"""
-
-    # Province names from your map
-    provinces = {
-        '01': 'Adana', '02': 'Adıyaman', '03': 'Afyonkarahisar', '04': 'Ağrı',
-        '05': 'Amasya', '06': 'Ankara', '07': 'Antalya', '08': 'Artvin',
-        '09': 'Aydın', '10': 'Balıkesir', '11': 'Bilecik', '12': 'Bingöl',
-        '13': 'Bitlis', '14': 'Bolu', '15': 'Burdur', '16': 'Bursa',
-        '17': 'Çanakkale', '18': 'Çankırı', '19': 'Çorum', '20': 'Denizli',
-        '21': 'Diyarbakır', '22': 'Edirne', '23': 'Elazığ', '24': 'Erzincan',
-        '25': 'Erzurum', '26': 'Eskişehir', '27': 'Gaziantep', '28': 'Giresun',
-        '29': 'Gümüşhane', '30': 'Hakkâri', '31': 'Hatay', '32': 'Isparta',
-        '33': 'Mersin', '34': 'İstanbul', '35': 'İzmir', '36': 'Kars',
-        '37': 'Kastamonu', '38': 'Kayseri', '39': 'Kırklareli', '40': 'Kırşehir',
-        '41': 'Kocaeli', '42': 'Konya', '43': 'Kütahya', '44': 'Malatya',
-        '45': 'Manisa', '46': 'Kahramanmaraş', '47': 'Mardin', '48': 'Muğla',
-        '49': 'Muş', '50': 'Nevşehir', '51': 'Niğde', '52': 'Ordu',
-        '53': 'Rize', '54': 'Sakarya', '55': 'Samsun', '56': 'Siirt',
-        '57': 'Sinop', '58': 'Sivas', '59': 'Tekirdağ', '60': 'Tokat',
-        '61': 'Trabzon', '62': 'Tunceli', '63': 'Şanlıurfa', '64': 'Uşak',
-        '65': 'Van', '66': 'Yozgat', '67': 'Zonguldak', '68': 'Aksaray',
-        '69': 'Bayburt', '70': 'Karaman', '71': 'Kırıkkale', '72': 'Batman',
-        '73': 'Şırnak', '74': 'Bartın', '75': 'Ardahan', '76': 'Iğdır',
-        '77': 'Yalova', '78': 'Karabük', '79': 'Kilis', '80': 'Osmaniye',
-        '81': 'Düzce'
-    }
-
-    # Get cities from database
-    from django.db.models import Count
-    db_cities = User.objects.values('city').annotate(count=Count('city')).order_by('city')
-
-    db_city_list = [item['city'] for item in db_cities if item['city']]
-    province_list = list(provinces.values())
-
-    # Find matches and mismatches
-    matched_cities = []
-    unmatched_db_cities = []
-    provinces_without_users = []
-
-    for db_city in db_city_list:
-        if db_city in province_list:
-            matched_cities.append(db_city)
-        else:
-            # Try case-insensitive match
-            found_match = False
-            for province in province_list:
-                if db_city.lower() == province.lower():
-                    matched_cities.append(f"{db_city} -> {province}")
-                    found_match = True
-                    break
-            if not found_match:
-                unmatched_db_cities.append(db_city)
-
-    # Find provinces without users
-    for province in province_list:
-        found = False
-        for db_city in db_city_list:
-            if db_city.lower() == province.lower():
-                found = True
-                break
-        if not found:
-            provinces_without_users.append(province)
-
-    return Response({
-        'database_cities': [{'city': item['city'], 'user_count': item['count']} for item in db_cities if item['city']],
-        'map_provinces': province_list,
-        'matched_cities': matched_cities,
-        'unmatched_db_cities': unmatched_db_cities,
-        'provinces_without_users': provinces_without_users[:10],  # Limit to first 10
-        'total_db_cities': len(db_city_list),
-        'total_provinces': len(province_list),
-        'match_rate': f"{len(matched_cities)}/{len(db_city_list)}"
-    })
