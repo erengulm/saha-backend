@@ -22,4 +22,6 @@ urlpatterns = [
 
     # Keep your existing endpoint for backward compatibility
     path('user/', views.user_detail, name='user_detail'),
+    path('users/by-city/', views.get_users_by_city, name='get_users_by_city'),
+    path('debug/cities/', views.debug_cities, name='debug_cities'),
 ]
