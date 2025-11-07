@@ -96,6 +96,8 @@ def user_detail(request):
         'first_name': user.first_name,
         'last_name': user.last_name,
         'city': getattr(user, 'city', ''),
+        'ilce': getattr(user, 'ilce', ''),
+        'mahalle': getattr(user, 'mahalle', ''),
         'phone': getattr(user, 'phone', ''),
         'email': user.email,
         'role': getattr(user, 'role', None),
@@ -121,6 +123,8 @@ def register_user(request):
     email = request.data.get('email', '').strip().lower()
     phone = request.data.get('phone', '').strip()
     city = request.data.get('city', '').strip()
+    ilce = request.data.get('ilce', '').strip()
+    mahalle = request.data.get('mahalle', '').strip()
     password = request.data.get('password', '')
     confirm_password = request.data.get('confirm_password', '')
     role = request.data.get('role', 'member')
@@ -152,6 +156,12 @@ def register_user(request):
     if not city:
         errors['city'] = ['Şehir bilgisi gereklidir']
 
+    if not ilce:
+        errors['ilce'] = ['İlçe bilgisi gereklidir']
+
+    if not mahalle:
+        errors['mahalle'] = ['Mahalle bilgisi gereklidir']
+
     if not password:
         errors['password'] = ['Şifre gereklidir']
     elif len(password) < 8:
@@ -177,6 +187,8 @@ def register_user(request):
             'email': email,
             'phone': phone,
             'city': city,
+            'ilce': ilce,
+            'mahalle': mahalle,
             'password': password,
             'confirm_password': confirm_password,
             'role': role
@@ -214,6 +226,8 @@ def user_profile(request):
         'last_name': user.last_name,
         'username': f"{user.first_name} {user.last_name}".strip(),
         'city': user.city,
+        'ilce': getattr(user, 'ilce', ''),
+        'mahalle': getattr(user, 'mahalle', ''),
         'phone': getattr(user, 'phone', ''),
         'email': user.email,
         'role': user.role,
@@ -253,6 +267,8 @@ def update_user_profile(request):
                 'last_name': updated_user.last_name,
                 'username': f"{updated_user.first_name} {updated_user.last_name}".strip(),
                 'city': updated_user.city,
+                'ilce': getattr(updated_user, 'ilce', ''),
+                'mahalle': getattr(updated_user, 'mahalle', ''),
                 'phone': getattr(updated_user, 'phone', ''),
                 'email': updated_user.email,
                 'role': updated_user.role,
@@ -306,6 +322,8 @@ def get_users_by_role(request):
             'last_name': user.last_name,
             'username': f"{user.first_name} {user.last_name}".strip(),
             'city': user.city,
+            'ilce': getattr(user, 'ilce', ''),
+            'mahalle': getattr(user, 'mahalle', ''),
             'phone': getattr(user, 'phone', ''),
             'email': user.email,
             'role': user.role,

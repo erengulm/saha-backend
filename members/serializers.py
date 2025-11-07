@@ -13,16 +13,20 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     1. first_name (Adınız)
     2. last_name (Soyadınız)
     3. city (Yaşadığınız şehir)
-    4. phone (Telefon)
-    5. email (E-mail - will be used as username)
-    6. password (Şifre)
-    7. confirm_password (Şifre tekrar)
+    4. ilce (İlçe)
+    5. mahalle (Mahalle)
+    6. phone (Telefon)
+    7. email (E-mail - will be used as username)
+    8. password (Şifre)
+    9. confirm_password (Şifre tekrar)
 
     Note: Email will be used as username for login
     """
     first_name = serializers.CharField(max_length=30, required=True)
     last_name = serializers.CharField(max_length=30, required=True)
-    city = serializers.CharField(max_length=50, required=True)
+    city = serializers.CharField(max_length=100, required=True)
+    ilce = serializers.CharField(max_length=100, required=True)
+    mahalle = serializers.CharField(max_length=100, required=True)
     phone = serializers.CharField(max_length=15, required=False, allow_blank=True)
     email = serializers.EmailField(required=True)
     password = serializers.CharField(write_only=True, min_length=8)  # Updated to match frontend
@@ -31,7 +35,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'city', 'phone', 'email', 'password', 'confirm_password', 'role')
+        fields = ('first_name', 'last_name', 'city', 'ilce', 'mahalle', 'phone', 'email', 'password', 'confirm_password', 'role')
 
     def validate(self, attrs):
         if attrs['password'] != attrs.get('confirm_password'):
@@ -94,13 +98,15 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class UserUpdateSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(max_length=30, required=False)
     last_name = serializers.CharField(max_length=30, required=False)
-    city = serializers.CharField(max_length=50, required=False)
+    city = serializers.CharField(max_length=100, required=False)
+    ilce = serializers.CharField(max_length=100, required=False)
+    mahalle = serializers.CharField(max_length=100, required=False)
     phone = serializers.CharField(max_length=15, required=False, allow_blank=True)
     email = serializers.EmailField(required=False)
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'city', 'phone', 'email')
+        fields = ('first_name', 'last_name', 'city', 'ilce', 'mahalle', 'phone', 'email')
 
     def validate_email(self, value):
         user = self.instance

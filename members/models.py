@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from .location_models import City, District, Neighborhood
 
 
 class User(AbstractUser):
@@ -14,12 +15,14 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=15, blank=True, null=True, unique=True)
     city = models.CharField(max_length=100)
+    ilce = models.CharField(max_length=100, blank=True, null=True)  # District
+    mahalle = models.CharField(max_length=100, blank=True, null=True)  # Neighborhood
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='member')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']  # Remove username
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'city', 'ilce', 'mahalle']
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}".strip() or self.email
