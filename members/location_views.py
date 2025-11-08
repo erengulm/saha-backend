@@ -10,10 +10,20 @@ def get_cities(request):
     """Get all cities"""
     try:
         cities = City.objects.all().values_list('name', flat=True).order_by('name')
-        return Response({
+        city_list = list(cities)
+        
+        # Ensure proper UTF-8 encoding
+        city_list = [str(c) for c in city_list]
+        
+        response = Response({
             'success': True,
-            'cities': list(cities)
+            'cities': city_list
         }, status=status.HTTP_200_OK)
+        
+        # Explicitly set content type for UTF-8
+        response['Content-Type'] = 'application/json; charset=utf-8'
+        return response
+        
     except Exception as e:
         return Response({
             'success': False,
@@ -27,11 +37,21 @@ def get_districts(request, city_name):
     try:
         city = City.objects.get(name=city_name)
         districts = city.districts.all().values_list('name', flat=True).order_by('name')
-        return Response({
+        district_list = list(districts)
+        
+        # Ensure proper UTF-8 encoding
+        district_list = [str(d) for d in district_list]
+        
+        response = Response({
             'success': True,
             'city': city_name,
-            'districts': list(districts)
+            'districts': district_list
         }, status=status.HTTP_200_OK)
+        
+        # Explicitly set content type for UTF-8
+        response['Content-Type'] = 'application/json; charset=utf-8'
+        return response
+        
     except City.DoesNotExist:
         return Response({
             'success': False,
@@ -51,12 +71,22 @@ def get_neighborhoods(request, city_name, district_name):
         city = City.objects.get(name=city_name)
         district = city.districts.get(name=district_name)
         neighborhoods = district.neighborhoods.all().values_list('name', flat=True).order_by('name')
-        return Response({
+        neighborhood_list = list(neighborhoods)
+        
+        # Ensure proper UTF-8 encoding
+        neighborhood_list = [str(n) for n in neighborhood_list]
+        
+        response = Response({
             'success': True,
             'city': city_name,
             'district': district_name,
-            'neighborhoods': list(neighborhoods)
+            'neighborhoods': neighborhood_list
         }, status=status.HTTP_200_OK)
+        
+        # Explicitly set content type for UTF-8
+        response['Content-Type'] = 'application/json; charset=utf-8'
+        return response
+        
     except City.DoesNotExist:
         return Response({
             'success': False,

@@ -62,6 +62,11 @@ class Command(BaseCommand):
                         district_name = row.get('district', '').strip() if 'district' in row else row.get('District', '').strip()
                         neighborhood_name = row.get('neighborhood', '').strip() if 'neighborhood' in row else row.get('Neighborhood', '').strip()
                         
+                        # Additional cleaning for any extra whitespace issues
+                        city_name = ' '.join(city_name.split())
+                        district_name = ' '.join(district_name.split())
+                        neighborhood_name = ' '.join(neighborhood_name.split())
+                        
                         # Handle potential trailing spaces in column names
                         if not neighborhood_name:
                             for key in row.keys():

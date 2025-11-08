@@ -122,15 +122,19 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'tr'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Istanbul'
 
 USE_I18N = True
 
 USE_L10N = True
 
 USE_TZ = True
+
+# Ensure UTF-8 encoding
+FILE_CHARSET = 'utf-8'
+DEFAULT_CHARSET = 'utf-8'
 
 CSRF_COOKIE_SECURE = False  # True if using HTTPS
 CSRF_COOKIE_HTTPONLY = False  # Needed to access from JS
