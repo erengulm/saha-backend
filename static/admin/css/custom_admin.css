@@ -1,0 +1,30 @@
+/* Custom CSS to override Django admin label styling */
+
+/* Make form field labels normal weight instead of bold */
+.change-form .form-row label,
+.add-form .form-row label,
+.aligned .form-row label,
+.wide .form-row label {
+    font-weight: normal !important;
+}
+
+/* Specifically target the Personal info fieldset labels */
+.module.aligned .form-row label {
+    font-weight: normal !important;
+}
+
+/* Target specific field labels by their for attribute */
+label[for="id_city"],
+label[for="id_ilce"], 
+label[for="id_mahalle"],
+label[for="id_phone"],
+label[for="id_first_name"],
+label[for="id_last_name"] {
+    font-weight: normal !important;
+}
+
+/* Override any other label styling in user admin */
+.change-user .form-row label,
+.add-user .form-row label {
+    font-weight: normal !important;
+}
