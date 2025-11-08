@@ -27,6 +27,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     city = serializers.CharField(max_length=100, required=True)
     ilce = serializers.CharField(max_length=100, required=True)
     mahalle = serializers.CharField(max_length=100, required=True)
+    finansal_kod_numarasi = serializers.CharField(required=True)
     phone = serializers.CharField(max_length=15, required=False, allow_blank=True)
     email = serializers.EmailField(required=True)
     password = serializers.CharField(write_only=True, min_length=8)  # Updated to match frontend
@@ -35,7 +36,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'city', 'ilce', 'mahalle', 'phone', 'email', 'password', 'confirm_password', 'role')
+        fields = ('first_name', 'last_name', 'city', 'ilce', 'mahalle', 'finansal_kod_numarasi', 'phone', 'email', 'password', 'confirm_password', 'role')
 
     def validate(self, attrs):
         if attrs['password'] != attrs.get('confirm_password'):
@@ -72,6 +73,16 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f"Geçersiz rol. Şunlardan biri olmalıdır: {', '.join(valid_roles)}")
         return value
 
+    def validate_finansal_kod_numarasi(self, value):
+        """Validate financial code number"""
+        try:
+            code = int(value)
+            if code < 1:
+                raise serializers.ValidationError("Finansal kod numarası 1 veya daha büyük bir sayı olmalıdır.")
+        except ValueError:
+            raise serializers.ValidationError("Finansal kod numarası geçerli bir sayı olmalıdır.")
+        return value
+
     def validate_password(self, value):
         """Custom password validation"""
         if len(value) < 8:
@@ -101,12 +112,13 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     city = serializers.CharField(max_length=100, required=False)
     ilce = serializers.CharField(max_length=100, required=False)
     mahalle = serializers.CharField(max_length=100, required=False)
+    finansal_kod_numarasi = serializers.CharField(required=False)
     phone = serializers.CharField(max_length=15, required=False, allow_blank=True)
     email = serializers.EmailField(required=False)
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'city', 'ilce', 'mahalle', 'phone', 'email')
+        fields = ('first_name', 'last_name', 'city', 'ilce', 'mahalle', 'finansal_kod_numarasi', 'phone', 'email')
 
     def validate_email(self, value):
         user = self.instance
@@ -114,6 +126,17 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         value = value.lower().strip()
         if User.objects.filter(email=value).exclude(pk=user.pk).exists():
             raise serializers.ValidationError("Bu e-posta adresi ile kayıtlı başka bir kullanıcı mevcut.")
+        return value
+
+    def validate_finansal_kod_numarasi(self, value):
+        """Validate financial code number"""
+        if value:
+            try:
+                code = int(value)
+                if code < 1:
+                    raise serializers.ValidationError("Finansal kod numarası 1 veya daha büyük bir sayı olmalıdır.")
+            except ValueError:
+                raise serializers.ValidationError("Finansal kod numarası geçerli bir sayı olmalıdır.")
         return value
 
     def validate_phone(self, value):

@@ -33,9 +33,9 @@ def turkish_sort_key(text):
 
 
 class CustomUserAdmin(UserAdmin):
-    list_display = ('email', 'first_name', 'last_name', 'city', 'ilce', 'mahalle', 'role', 'is_staff', 'created_at')
+    list_display = ('email', 'first_name', 'last_name', 'city', 'ilce', 'mahalle', 'finansal_kod_numarasi', 'role', 'is_staff', 'created_at')
     list_filter = ('role', 'city', 'ilce', 'is_staff', 'created_at')
-    search_fields = ('email', 'first_name', 'last_name', 'city', 'ilce', 'mahalle')
+    search_fields = ('email', 'first_name', 'last_name', 'city', 'ilce', 'mahalle', 'finansal_kod_numarasi')
     ordering = ('email',)
     
     def formfield_for_dbfield(self, db_field, request, **kwargs):
@@ -112,12 +112,14 @@ class CustomUserAdmin(UserAdmin):
                 attrs={'id': 'id_mahalle'}
             )
             return field
+        elif db_field.name == 'finansal_kod_numarasi':
+            kwargs['label'] = 'Finansal Kod Numarası'
         
         return super().formfield_for_dbfield(db_field, request, **kwargs)
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'city', 'ilce', 'mahalle', 'phone')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'city', 'ilce', 'mahalle', 'finansal_kod_numarasi', 'phone')}),
         ('Permissions', {'fields': ('role', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
@@ -125,7 +127,7 @@ class CustomUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'first_name', 'last_name', 'city', 'ilce', 'mahalle', 'phone', 'role'),
+            'fields': ('email', 'password1', 'password2', 'first_name', 'last_name', 'city', 'ilce', 'mahalle', 'finansal_kod_numarasi', 'phone', 'role'),
         }),
     )
 
