@@ -115,10 +115,14 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     finansal_kod_numarasi = serializers.CharField(required=False)
     phone = serializers.CharField(max_length=15, required=False, allow_blank=True)
     email = serializers.EmailField(required=False)
+    meslegim = serializers.CharField(required=False, allow_blank=True)
+    ilgi_alanlarim = serializers.CharField(required=False, allow_blank=True)
+    yeteneklerim = serializers.CharField(required=False, allow_blank=True)
+    hobilerim = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'city', 'ilce', 'mahalle', 'finansal_kod_numarasi', 'phone', 'email')
+        fields = ('first_name', 'last_name', 'city', 'ilce', 'mahalle', 'finansal_kod_numarasi', 'phone', 'email', 'meslegim', 'ilgi_alanlarim', 'yeteneklerim', 'hobilerim')
 
     def validate_email(self, value):
         user = self.instance

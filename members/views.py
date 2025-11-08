@@ -231,6 +231,10 @@ def user_profile(request):
         'finansal_kod_numarasi': getattr(user, 'finansal_kod_numarasi', ''),
         'phone': getattr(user, 'phone', ''),
         'email': user.email,
+    'meslegim': getattr(user, 'meslegim', ''),
+    'ilgi_alanlarim': getattr(user, 'ilgi_alanlarim', ''),
+        'yeteneklerim': getattr(user, 'yeteneklerim', ''),
+        'hobilerim': getattr(user, 'hobilerim', ''),
         'role': user.role,
         'role_display': user.get_role_display(),
         'is_superadmin': user.is_superadmin,
@@ -246,6 +250,10 @@ def user_profile(request):
 def update_user_profile(request):
     """Update current user's profile"""
     user = request.user
+    
+    # Debug: Print received data
+    print(f"DEBUG: Received profile update data: {request.data}")
+    print(f"DEBUG: User being updated: {user.email}")
 
     # Handle username field if provided (split into first_name and last_name)
     if 'username' in request.data:
@@ -257,6 +265,11 @@ def update_user_profile(request):
         request.data.pop('username', None)
 
     serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+    
+    # Debug: Print serializer validation
+    print(f"DEBUG: Serializer is_valid: {serializer.is_valid()}")
+    if not serializer.is_valid():
+        print(f"DEBUG: Serializer errors: {serializer.errors}")
 
     if serializer.is_valid():
         updated_user = serializer.save()
@@ -273,6 +286,10 @@ def update_user_profile(request):
                 'finansal_kod_numarasi': getattr(updated_user, 'finansal_kod_numarasi', ''),
                 'phone': getattr(updated_user, 'phone', ''),
                 'email': updated_user.email,
+                'meslegim': getattr(updated_user, 'meslegim', ''),
+                'ilgi_alanlarim': getattr(updated_user, 'ilgi_alanlarim', ''),
+                'yeteneklerim': getattr(updated_user, 'yeteneklerim', ''),
+                'hobilerim': getattr(updated_user, 'hobilerim', ''),
                 'role': updated_user.role,
                 'role_display': updated_user.get_role_display(),
             }

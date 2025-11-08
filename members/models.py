@@ -41,6 +41,10 @@ class User(AbstractUser):
     ilce = models.CharField(max_length=100, blank=True, null=True, verbose_name="İlçe")  # District
     mahalle = models.CharField(max_length=100, blank=True, null=True, verbose_name="Mahalle")  # Neighborhood
     finansal_kod_numarasi = models.CharField(max_length=10, blank=True, null=True, verbose_name="Finansal Kod Numarası", default="1")
+    meslegim = models.TextField(blank=True, null=True, verbose_name="Mesleğim")
+    ilgi_alanlarim = models.TextField(blank=True, null=True, verbose_name="İlgi Alanlarım")
+    yeteneklerim = models.TextField(blank=True, null=True, verbose_name="Yeteneklerim")
+    hobilerim = models.TextField(blank=True, null=True, verbose_name="Hobilerim")
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='member')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

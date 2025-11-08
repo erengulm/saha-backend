@@ -114,12 +114,21 @@ class CustomUserAdmin(UserAdmin):
             return field
         elif db_field.name == 'finansal_kod_numarasi':
             kwargs['label'] = 'Finansal Kod Numarası'
+        elif db_field.name == 'meslegim':
+            kwargs['label'] = 'Mesleğim'
+        elif db_field.name == 'ilgi_alanlarim':
+            kwargs['label'] = 'İlgi Alanlarım'
+        elif db_field.name == 'yeteneklerim':
+            kwargs['label'] = 'Yeteneklerim'
+        elif db_field.name == 'hobilerim':
+            kwargs['label'] = 'Hobilerim'
         
         return super().formfield_for_dbfield(db_field, request, **kwargs)
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'city', 'ilce', 'mahalle', 'finansal_kod_numarasi', 'phone')}),
+        ('About me', {'fields': ('meslegim', 'ilgi_alanlarim', 'yeteneklerim', 'hobilerim')}),
         ('Permissions', {'fields': ('role', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
@@ -128,6 +137,10 @@ class CustomUserAdmin(UserAdmin):
         (None, {
             'classes': ('wide',),
             'fields': ('email', 'password1', 'password2', 'first_name', 'last_name', 'city', 'ilce', 'mahalle', 'finansal_kod_numarasi', 'phone', 'role'),
+        }),
+        ('About me', {
+            'classes': ('wide',),
+            'fields': ('meslegim', 'ilgi_alanlarim', 'yeteneklerim', 'hobilerim'),
         }),
     )
 
