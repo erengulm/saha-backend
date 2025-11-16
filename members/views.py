@@ -366,26 +366,42 @@ def get_users_by_role(request):
 def get_users_by_city(request):
     """Get users grouped by city for map display"""
     try:
-        # Get all users with their cities
-        users = User.objects.filter(is_active=True).values('first_name', 'last_name', 'city', 'role')
+        # Get all users with their cities and districts
+        users = User.objects.filter(is_active=True).values('first_name', 'last_name', 'city', 'ilce', 'role')
 
-        # Group users by city
+        # Group users by city and district
         city_users = {}
 
         for user in users:
-            city = user['city'].strip()
+            city = user['city'].strip() if user['city'] else ''
+            ilce = user['ilce'].strip() if user['ilce'] else ''
+            
             if not city:
                 continue
 
             full_name = f"{user['first_name']} {user['last_name']}".strip()
 
-            if city not in city_users:
-                city_users[city] = []
+            # For Istanbul, group by district (ilce)
+            # Use Turkish locale-aware comparison for Istanbul
+            city_lower = city.replace('İ', 'i').replace('I', 'ı').lower()
+            if city_lower == 'istanbul' and ilce:
+                # Use district as the key for Istanbul
+                if ilce not in city_users:
+                    city_users[ilce] = []
+                
+                city_users[ilce].append({
+                    'name': full_name,
+                    'role': user['role']
+                })
+            else:
+                # For other cities, group by city
+                if city not in city_users:
+                    city_users[city] = []
 
-            city_users[city].append({
-                'name': full_name,
-                'role': user['role']
-            })
+                city_users[city].append({
+                    'name': full_name,
+                    'role': user['role']
+                })
 
         return Response({
             'success': True,
